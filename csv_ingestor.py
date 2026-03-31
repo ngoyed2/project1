@@ -2,20 +2,20 @@
 import pandas as pd
 import sqlite3
 
-# Step 1: Load CSV
+# step 1 is to load the csv
 def load_csv(file_path):
     df = pd.read_csv(file_path)
-    print(df.head())  # inspect data
+    print(df.head())
     return df
 
-# Step 2: Create SQLite connection
+# step 2 is to create a sqlite connection
 def create_connection(db_name):
-    conn = sqlite3.connect(db_name)
-    return conn
+    connection = sqlite3.connect(db_name)
+    return connection
 
-# Step 3: Create table manually
-def create_table(conn):
-    cursor = conn.cursor()
+# step 3 is to create the table
+def create_table(connection):
+    cursor = connection.cursor()
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS people (
@@ -26,11 +26,11 @@ def create_table(conn):
     )
     """)
 
-    conn.commit()
+    connection.commit()
 
 # Step 4: Insert data manually
-def insert_data(conn, df):
-    cursor = conn.cursor()
+def insert_data(connection, df):
+    cursor = connection.cursor()
 
     for _, row in df.iterrows():
         cursor.execute("""
@@ -38,17 +38,17 @@ def insert_data(conn, df):
         VALUES (?, ?, ?)
         """, (row['first_name'], row['last_name'], row['age']))
 
-    conn.commit()
+    connection.commit()
 
 # Main execution
 def main():
     df = load_csv("data.csv")
-    conn = create_connection("database.db")
+    connection = create_connection("database.db")
 
-    create_table(conn)
-    insert_data(conn, df)
+    create_table(connection)
+    insert_data(connection, df)
 
-    conn.close()
+    connection.close()
 
 if __name__ == "__main__":
     main()
