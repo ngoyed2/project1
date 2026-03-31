@@ -28,7 +28,7 @@ def create_table(connection):
 
     connection.commit()
 
-# Step 4: Insert data manually
+# step 4 is to insert the data manually using the code
 def insert_data(connection, df):
     cursor = connection.cursor()
 
@@ -40,7 +40,7 @@ def insert_data(connection, df):
 
     connection.commit()
 
-# Main execution
+# main
 def main():
     df = load_csv("data.csv")
     connection = create_connection("database.db")
