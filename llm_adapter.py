@@ -23,7 +23,7 @@ Output Format:
 - Explanation: <brief explanation of query here> """
 
 # function to parse LLM response in desired format
-def parse_response(text:str) -> tuple[str, str]:
+def parse_response(text:str):
 # tuple will return sql format, and explanation
 # values start off blank and are overwritten if proper info is generated
     sql = ""
@@ -45,13 +45,16 @@ def parse_response(text:str) -> tuple[str, str]:
         elif line.lower().startswith("- explanation:"):
             explanation = line.split(":",1)[1].strip()
 
-    # if sql info not found, will result in error message
+    # if sql or explanation info not found, will result in error message
     if not sql or not explanation:
-        return  "INVALID", "Cannot extract SQL from response, please try again"
-    return sql, explanation
+        return  "INVALID, Cannot extract SQL from response, please try again"
+    return {
+        "sql": sql,
+        "explanation":explanation
+    }
 
 # main function to translate user natural language into something understood by SQL 
-def translate(user_input:str, schema:str) -> tuple[str,str]:
+def translate(user_input:str, schema:str):
 
     # necessary to use OpenAI api
     api_key = os.getenv("OPENAI_API_KEY")
@@ -61,7 +64,7 @@ def translate(user_input:str, schema:str) -> tuple[str,str]:
 
     # returns message is no schema was input
     if not schema:
-        return "INVALID", "No table input, cannot generate response"
+        return "INVALID, No schema input, cannot generate response"
     
     # helps build full prompt using the schema and users input
     prompt = main_prompt.format(
