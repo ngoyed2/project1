@@ -8,7 +8,7 @@ load_dotenv() # to read .env file into environment
 main_prompt = """You are an AI assistant tasked with converting user queries into SQL statements. 
 The database uses SQLite and contains the following tables: 
 
-Table: {schema_info}
+Table: {schema}
 User Query: "{user_input}" 
 
 Your task is to: 
@@ -19,7 +19,7 @@ question.
 
 Output Format: 
 
-- SQL Query: <sql query here>
+- SQL Query: <sql query here> 
 - Explanation: <brief explanation of query here> """
 
 # function to parse LLM response in desired format
@@ -36,7 +36,6 @@ def parse_response(text:str) -> tuple[str, str]:
         # looks to find line that'll be returned as sql value, and takes info only after the colon
         if line.lower().startswith("- sql query:"):
             sql = line.split(":",1)[1].strip()
-
             # strip markdowns as well, and adds semicolon in proper SQL form
             if sql.startswith("```"):
                 sql = sql.replace("```sql", "").replace("```","").strip()
@@ -47,7 +46,7 @@ def parse_response(text:str) -> tuple[str, str]:
             explanation = line.split(":",1)[1].strip()
 
     # if sql info not found, will result in error message
-    if not sql:
+    if not sql or not explanation:
         return  "INVALID", "Cannot extract SQL from response, please try again"
     return sql, explanation
 
