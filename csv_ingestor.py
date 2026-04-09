@@ -30,16 +30,16 @@ def create_table(connection):
     connection.commit()
 
 # step 4 is to insert the data manually using the code
-def insert_data(connection, df):
+def insert_data(connection, table_name, df):
     cursor = connection.cursor()
-
+    df.columns = [col.strip().lower().replace(" ", "_") for col in df.columns]
+    placeholders = ", ".join(["?"] * len(df.columns))
+    columns_sql = ", ".join(df.columns)
+    insert_sql = f"INSERT INTO {table_name} ({columns_sql}) VALUES ({placeholders})"
     for _, row in df.iterrows():
-        cursor.execute("""
-        INSERT INTO people (first_name, last_name, age)
-        VALUES (?, ?, ?)
-        """, (row['first_name'], row['last_name'], row['age']))
-
+        cursor.execute(insert_sql, tuple(row))
     connection.commit()
+    print("Data inserted successfully.")
 
 # main
 def main():
