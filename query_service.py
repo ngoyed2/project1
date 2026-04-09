@@ -27,7 +27,8 @@ def list_tables(db_file):
         print(f"- {table[0]}")
 
 # now create an insert_data function to load the csv
-def insert_data(conn, table_name, df):
+def insert_data(db_file, table_name, df):
+    conn = sqlite3.connect(db_file)
     cursor = conn.cursor()
     df.columns = [col.strip().lower().replace(" ", "_") for col in df.columns]
     placeholders = ", ".join(["?"] * len(df.columns))
