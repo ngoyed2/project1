@@ -61,3 +61,38 @@ def extract_selected_columns(query):
         return ["*"]
     columns = [col.strip() for col in raw_columns.split(",")]
     return columns
+
+# and now we want to parse columns used in WHERE
+# por example, SELECT first_name FROM people WHERE age > 20 will return age
+def extract_where_columns(query):
+    match = re.search(r"\bwhere\s+(.*?)(\blimit\b|$)", query, re.IGNORECASE)
+    if not match:
+        return []
+    where_clause = match.group(1)
+    columns = re.findall(r"([a-zA-Z_][a-zA-Z0-9_]*)\s*(=|!=|<|>|<=|>=)", where_clause)
+    return [col[0] for col in columns]
+
+# put everything together and build the validator
+def validate_select_query(conn, query):
+    ok, message = basic_select_check(query)
+    if not ok:
+        return False, message
+    schema = get_database_schema(conn)
+    table_name = extract_table_name(query)
+    if not table_name:
+        return False, "Missing or invalid FROM clause."
+    if table_name not in schema:
+        return False, f"Unknown table: {table_name}"
+    valid_columns = schema[table_name]
+    selected_columns = extract_selected_columns(query)
+    if selected_columns is None:
+        return False, "Could not parse selected columns."
+    if selected_columns != ["*"]:
+        for col in selected_columns:
+            if col not in valid_columns:
+                return False, f"Unknown column in SELECT: {col}"
+    where_columns = extract_where_columns(query)
+    for col in where_columns:
+        if col not in valid_columns:
+            return False, f"Unknown column in WHERE: {col}"
+    return True, "Valid."
