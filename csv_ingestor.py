@@ -1,6 +1,7 @@
 # takes csv file and transforms it into a sql table
 import pandas as pd
 import sqlite3
+from schema_manager import handle_schema
 
 # step 1 is to load the csv
 def load_csv(file_path):
@@ -45,8 +46,12 @@ def main():
     df = load_csv("data.csv")
     connection = create_connection("database.db")
 
+    table_name = "people"
+
+    final_table_name = handle_schema(connection, table_name, df)
+
     create_table(connection)
-    insert_data(connection, df)
+    insert_data(connection, final_table_name, df)
 
     connection.close()
 
