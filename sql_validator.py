@@ -3,10 +3,6 @@ import sqlite3
 
 # right now our validator rules only allows select columns from table
 
-# define a simple api, this is the main function our query service will call, should return true/false
-def validate_select_query(conn, query):
-    pass
-
 # define a function to get the database schema, the validator needs to know what tables exist and what columns each table has
 # por example, if the db has the table people, itll most likely return all the columns in people
 def get_database_schema(conn):
@@ -95,4 +91,4 @@ def validate_select_query(conn, query):
     for col in where_columns:
         if col not in valid_columns:
             return False, f"Unknown column in WHERE: {col}"
-    return True, "Valid."
+    return True, "Valid query."
