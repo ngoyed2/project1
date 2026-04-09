@@ -127,3 +127,5 @@ def handle_schema(conn, table_name, df):
     else:
         print("Invalid choice. Skipping by default.")
         return None
+    
+# as of 4/8, the rows get duplicated
