@@ -87,7 +87,7 @@ def get_existing_table_schema(conn, table_name):
         return schema
     except Exception as e:
         logging.error(f"Error reading schema for table '{table_name}': {e}")
-        print("Error reading existing schema. Check error_log.txt")
+        print("Error occured, check log file!")
         return None
 
 # before comparing the schemas, check if the table is there
@@ -127,27 +127,33 @@ def handle_schema(conn, table_name, df):
     # ask the user what they want to do 
     choice = input("Enter your choice: ").strip().lower()
     if choice == "overwrite":
+        # this will replace the old table
         try:
             cursor = conn.cursor()
+            # delete the old table from the database
             cursor.execute(f"DROP TABLE IF EXISTS {table_name};")
             conn.commit()
+            # recreate the table with the new csv schema
             create_table(conn, table_name, csv_schema)
-            print(f"Table '{table_name}' was overwritten.")
+            print(f"Table '{table_name}' was overwritten!")
             return table_name
         except Exception as e:
             logging.error(f"Error overwriting table '{table_name}': {e}")
-            print("Error overwriting table. Check error_log.txt")
+            print("Error occured, check log file!")
             return None
+    # if the user chooses rename, create a new table with a different name 
     elif choice == "rename":
         new_table_name = input("Enter new table name: ").strip()
         create_table(conn, new_table_name, csv_schema)
         print(f"Created new table '{new_table_name}'.")
         return new_table_name
+    # dont create or change any table if user chooses skip
     elif choice == "skip":
-        print("Skipping table creation.")
+        print("Skipping table creation!")
         return None
+    # they type anything else
     else:
-        print("Invalid choice. Skipping by default.")
+        print("Invalid choice, skipping by default!")
         return None
     
 # as of 4/8, the rows get duplicated

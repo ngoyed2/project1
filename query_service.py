@@ -9,7 +9,8 @@ def connect_db(db_name="database.db"):
 
 # since the slide mentions sqlite_master, we should add list tables function to show all table names
 # por example, the only tables that will be outputted is people since thats all we have 
-def list_tables(conn):
+def list_tables(db_file):
+    conn = sqlite3.connect(db_file)
     cursor = conn.cursor()
     cursor.execute("""
         SELECT name
