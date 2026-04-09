@@ -25,7 +25,7 @@ def infer_sql_type(dtype):
         return "TEXT"
 
 # this reads the dataframe and extracts the schema, so it returns "first_name" : "TEXT", and etc
-def get_schema(df):
+def get_csv_schema(df):
     schema = {}
     for column in df.columns:
         normalized_name = normalize_column_name(column)
