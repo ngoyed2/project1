@@ -51,7 +51,7 @@ def parse_response(text:str) -> tuple[str, str]:
         return  "INVALID", "Cannot extract SQL from response, please try again"
     return sql, explanation
 
-# function to translate user natural language into something understood by SQL 
+# main function to translate user natural language into something understood by SQL 
 def translate(user_input:str, schema:str) -> tuple[str,str]:
 
     # necessary to use OpenAI api
