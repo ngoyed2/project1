@@ -1,8 +1,7 @@
 import os
 import sys
 from csv_ingestor import load_csv
-from llm_adapter import translate
-from query_service import list_tables, insert_data
+from query_service import list_tables, insert_data # can only access csv and query modules directly
 
 commands = """
 Commands:
@@ -17,13 +16,22 @@ exit -> quit
 
 """
 
+db = "database.db"
+
 # need to get access to database
 
 # functions to handle commands other than help and exit
-def load_command(csv):
-    return
+def load_command(args: str, csv:str):
+    try:
+        return("The following csv file has been loaded: ")
+        loaded_csv = load_csv(csv)
+        # need to connect to database, use query function for that
+    except FileNotFoundError as e:
+        print("Error: " + e)
 
+# function utilizing LLM for user to ask natural language question    
 def ask_command(question):
+    # once llm function is imported to query service, input here along with schema to fun
     return
 
 def sql_command(syntax):
@@ -46,16 +54,17 @@ def main():
         # connect these inputs to functions probably, instead of putting all code in one place
         elif user_input.lower().strip() == "help":
             print(commands)
-        elif user_input.lower().strip() == "schema":
+        elif user_input.lower().strip().startswith("schema"):
             print()
-        elif user_input.lower().strip() == "ask":
+        elif user_input.lower().strip().startswith("ask"):
+            print("test")
+        elif user_input.lower().strip().startswith("sql"):
             print()
-        elif user_input.lower().strip() == "sql":
-            print()
-        elif user_input.lower().strip() == "load":
-            print()
-        
-        elif user_input.lower().strip() == "tables":
+        elif user_input.lower().strip().startswith("load"):
+            command, csv = user_input.split(" ")
+            print("\n")
+            print(load_command(command, csv))
+        elif user_input.lower().strip().startswith("tables"):
             print()
 
         # handles unexpected commands
