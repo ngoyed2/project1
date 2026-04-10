@@ -1,4 +1,4 @@
-from src.query_service import list_tables
+from query_service import list_tables
 
 def main():
     db_file = "database.db"

@@ -1,5 +1,5 @@
 import sqlite3
-from src.sql_validator import(get_database_schema,
+from sql_validator import(get_database_schema,
     basic_select_check,
     extract_table_name,
     extract_selected_columns,

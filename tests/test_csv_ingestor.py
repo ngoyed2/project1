@@ -2,7 +2,7 @@ import os
 import pytest
 import sqlite3
 import pandas as pd
-from src.csv_ingestor import load_csv, create_connection, create_table, insert_data
+from csv_ingestor import load_csv, create_connection, create_table, insert_data
 
 # sends sample_df to a real csv file and returns the path
 @pytest.fixture

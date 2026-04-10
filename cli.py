@@ -1,5 +1,5 @@
 import sqlite3
-from src.query_service import list_tables, load_csv_flow, run_sql_flow, run_nl_flow, get_schema # can only access csv and query modules directly
+from query_service import list_tables, load_csv_flow, run_sql_flow, run_nl_flow, get_schema # can only access csv and query modules directly
 
 commands = """
 Commands:

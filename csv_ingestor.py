@@ -2,7 +2,7 @@
 import os
 import pandas as pd
 import sqlite3
-from src.schema_manager import handle_schema
+from schema_manager import handle_schema
 
 # step 1 is to load the csv
 def load_csv(file_path):

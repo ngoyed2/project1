@@ -2,7 +2,7 @@ import sqlite3
 import pytest
 import pandas as pd
 from unittest.mock import patch
-from src.schema_manager import handle_schema, get_csv_schema, table_exists, schemas_match
+from schema_manager import handle_schema, get_csv_schema, table_exists, schemas_match
 
 # helper functions to make connections/df for later testing
 def make_connection():
