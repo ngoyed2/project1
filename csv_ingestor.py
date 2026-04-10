@@ -25,6 +25,7 @@ def create_connection(db_name):
     return connection
 
 # step 3 is to create our table. it is based on our basic csv file
+# we do not need this function anymore since we have handle_schema!!!
 def create_table(connection):
     # cursor sends sql commands to sqlite
     cursor = connection.cursor()
