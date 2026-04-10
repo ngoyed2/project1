@@ -35,13 +35,15 @@ def basic_select_check(query):
     # check if empty
     if not query:
         return False, "Query is empty!"
+    # this searched for sql comments, and strips them before further
+    query_no_comments = re.sub(r"--.*$", "", query, flags=re.MULTILINE).strip()
     # this created a lowercased version of the query because capitalization matters, so SELECT or select should work
-    lowered = query.lower()
+    lowered = query_no_comments.lower()
     # if the query doesnt use select, then its automatically rejected
     if not lowered.startswith("select"):
         return False, "Only SELECT queries are allowed!"
     # multiple semicolons means that multiple query statements are being used, which we want to reject
-    if ";" in query[:-1]:
+    if ";" in query_no_comments[:-1]:
         return False, "Only one SQL statement is allowed."
     # this is all of the dangerous keyworks
     forbidden = ["insert", "update", "delete", "drop", "alter", "create"]
