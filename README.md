@@ -1,8 +1,7 @@
-system overview
 how to run the project
 how to run tests
 
-# Building Data Systems with LLM Interfaces
+# Building Data Systems with LLM Interfaces: Project 1
 
 ## System Overview:
 
@@ -29,3 +28,8 @@ Based on the system architecture shown above, our essential project files includ
 - **Query Service (CLI)**: Main interface for user interaction
 - **SQL Validator**: Ensures only safe and valid SQL queries are executed
 - **LLM Adapter**: Converts natural language into SQL queries
+
+## Running the Project:
+
+The general overview to run our project is as follows:
+1. Install all dependecies 
