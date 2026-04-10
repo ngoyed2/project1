@@ -1,5 +1,3 @@
-import os
-import sys
 import sqlite3
 from query_service import list_tables, load_csv_flow, run_sql_flow, run_nl_flow, get_schema # can only access csv and query modules directly
 
@@ -29,25 +27,23 @@ def main():
         if user_input.lower().strip() == "exit":
             print("GOODBYE!")
             break
-
-        # connect these inputs to functions probably, instead of putting all code in one place
         elif user_input.lower().strip() == "help":
             print(commands)
         elif user_input.lower().strip().startswith("schema"):
             result = get_schema(conn)
-            print(result)
+            # print(result)
         elif user_input.lower().strip().startswith("ask"):
             result = run_nl_flow(conn)
-            print(result)
+            # print(result)
         elif user_input.lower().strip().startswith("sql"):
             result = run_sql_flow(conn)
-            print(result)
+            # print(result)
         elif user_input.lower().strip().startswith("load"):
             result = load_csv_flow(conn)
-            print(result)
+            # print(result)
         elif user_input.lower().strip().startswith("tables"):
             result = list_tables(conn)
-            print(result)
+            # print(result)
 
         # handles unexpected commands
         else:

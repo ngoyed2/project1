@@ -10,6 +10,25 @@ from llm_adapter import translate
 def connect_db(db_name="database.db"):
     return sqlite3.connect(db_name)
 
+def format_results(headers, rows):
+    col_widths = [len(h) for h in headers]
+    for row in rows:
+        for i, cell in enumerate(row):
+            col_widths[i] = max(col_widths[i], len(str(cell)))
+
+    divider = "+-" + "-+-".join("-" * w for w in col_widths) + "-+"
+
+    def fmt_row(values):
+        cells = (str(v).ljust(col_widths[i]) for i, v in enumerate(values))
+        return "| " + " | ".join(cells) + " |"
+
+    print(divider)
+    print(fmt_row(headers))
+    print(divider)
+    for row in rows:
+        print(fmt_row(row))
+    print(divider)
+
 # since the slide mentions sqlite_master, we should add list tables function to show all table names
 # por example, the only tables that will be outputted is people since thats all we have 
 def list_tables(conn):
@@ -71,8 +90,8 @@ def execute_query(conn, query):
         results = cursor.fetchall()
         if results:
             print("\nResults:")
-            for row in results:
-                print(row)
+            headers = [desc[0] for desc in cursor.description]
+            format_results(headers, results)
         else:
             print("Query ran but returned no rows!")
     except Exception as e:
