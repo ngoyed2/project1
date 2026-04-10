@@ -1,0 +1,18 @@
+One instance in which our unit tests were able to catch llm generated errors was when we tested how it handled the SELECT commands, which was a base function in the majority of our code. When writing a unit test, we wanted to take into account various possibilities for SQL input, including syntax that may register as a comment. To test for this we wrote the following unit test:
+
+def test_select_disguised_as_comment(self):
+        # injection attempt hiding DROP inside a comment
+        ok, msg = basic_select_check("SELECT * FROM people -- DROP TABLE people")
+        assert ok is True  # comment is safe, documents expected behaviour
+
+This test ended up failing, and as result we knew we had to add another check to the select check code. We did that by altering the code so instead of just using:
+
+query = query.strip()
+
+For sanitization, we added a command to check for potential comments which could lead to injections:
+
+query_no_comments = re.sub(r"--.*$", "", query, flags=re.MULTILINE).strip()
+
+This proceeded to be used in the rest of our select checks, ensuring an added layer of sanitization
+
+

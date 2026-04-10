@@ -37,6 +37,7 @@ class TestSchemaManager:
         conn = make_connection()
         handle_schema(conn, "people", make_df())
         df2 = pd.DataFrame({"email": ["a@b.com"]})
+        # used to handle user input aspect of code, replaces it with value we input
         with patch("builtins.input", return_value="overwrite"):
             result = handle_schema(conn, "people", df2)
         assert result == "people"
@@ -45,6 +46,7 @@ class TestSchemaManager:
         conn = make_connection()
         handle_schema(conn, "people", make_df())
         df2 = pd.DataFrame({"email": ["a@b.com"]})
+        # used to handle user input aspect of code, replaces it with value we input 
         with patch("builtins.input", side_effect=["rename", "people_v2"]):
             result = handle_schema(conn, "people", df2)
         assert result == "people_v2"
@@ -53,6 +55,7 @@ class TestSchemaManager:
         conn = make_connection()
         handle_schema(conn, "people", make_df())
         df2 = pd.DataFrame({"email": ["a@b.com"]})
+        # used to handle user input aspect of code, replaces it with value we input
         with patch("builtins.input", return_value="skip"):
             result = handle_schema(conn, "people", df2)
         assert result is None
