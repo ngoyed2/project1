@@ -3,8 +3,6 @@ from llm_adapter import translate, parse_response
 from unittest.mock import patch, MagicMock
 import os
 os.environ["OPENAI_API_KEY"] = "test-fake-key"
-
-
 class TestParser:
 
     # tests that parser can handle basic response given proper return
