@@ -1,5 +1,6 @@
 import os
 import sys
+import sqlite3
 from csv_ingestor import load_csv
 from query_service import list_tables, insert_data # can only access csv and query modules directly
 
@@ -17,6 +18,8 @@ exit -> quit
 """
 
 db = "database.db"
+
+conn = sqlite3.connect(db)
 
 # need to get access to database
 
