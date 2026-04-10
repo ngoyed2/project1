@@ -1,16 +1,15 @@
 import os
 import sys
 import sqlite3
-from csv_ingestor import csv_to_sql
-from query_service import list_tables, insert_data # can only access csv and query modules directly
+from query_service import list_tables, load_csv_flow, run_sql_flow, run_nl_flow, get_schema # can only access csv and query modules directly
 
 commands = """
 Commands:
 
 help -> shows user commands
-load <csv> -> allows user to input CSV file
-ask <question> -> lets user ask question in natural language
-sql <command> -> execute sql command directly
+load -> allows user to input CSV file
+ask -> lets user ask question in natural language
+sql -> execute sql command directly
 tables -> show all current tables
 schema <table> -> show schema for table
 exit -> quit
@@ -19,27 +18,7 @@ exit -> quit
 
 db = "database.db"
 
-# need to get access to database
-
-# functions to handle commands other than help and exit
-def load_command(args: str, csv:str):
-    try:
-        loaded_csv = csv_to_sql(csv,db)
-        table_name = loaded_csv["final_table_name"]
-        print("Your table named " + " has been successfully loaded!")
-    except FileNotFoundError as e:
-        print("Error: " + e)
-
-# function utilizing LLM for user to ask natural language question    
-def ask_command(question):
-    # once llm function is imported to query service, input here along with schema to fun
-    return
-
-def sql_command(syntax):
-    return
-
-def schema_command(table):
-    return
+conn = sqlite3.connect(db)
 
 def main():
     # main function that contains operative aspect of system
@@ -55,17 +34,20 @@ def main():
         elif user_input.lower().strip() == "help":
             print(commands)
         elif user_input.lower().strip().startswith("schema"):
-            print()
+            result = get_schema(conn)
+            print(result)
         elif user_input.lower().strip().startswith("ask"):
-            print("test")
+            result = run_nl_flow(conn)
+            print(result)
         elif user_input.lower().strip().startswith("sql"):
-            print()
+            result = run_sql_flow(conn)
+            print(result)
         elif user_input.lower().strip().startswith("load"):
-            command, csv = user_input.split(" ")
-            print("\n")
-            print(load_command(command, csv))
+            result = load_csv_flow(conn)
+            print(result)
         elif user_input.lower().strip().startswith("tables"):
-            print()
+            result = list_tables(conn)
+            print(result)
 
         # handles unexpected commands
         else:

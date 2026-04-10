@@ -54,24 +54,24 @@ def insert_data(connection, table_name, df):
     for _, row in df.iterrows():
         cursor.execute(insert_sql, tuple(row))
     connection.commit()
-    # print("Data inserted!")
+    print("Data inserted!")
 
-def csv_to_sql(csv:str, database:str):
-    df = load_csv(csv)
-    connection = create_connection(database)
-    # determines name for the table based on csv name
-    table_name = csv.split(".")[0].replace(" ","_")
-    # this sends our connection, table name and dataframe to the schema manager
-    final_table_name = handle_schema(connection, table_name, df)
-    # if the schema manager changed the table in any way, we want to insert the new table name
-    insert_data(connection, final_table_name, df)
-    connection.close()
+# def csv_to_sql(csv:str, database:str):
+#     df = load_csv(csv)
+#     connection = create_connection(database)
+#     # determines name for the table based on csv name
+#     table_name = csv.split(".")[0].replace(" ","_")
+#     # this sends our connection, table name and dataframe to the schema manager
+#     final_table_name = handle_schema(connection, table_name, df)
+#     # if the schema manager changed the table in any way, we want to insert the new table name
+#     insert_data(connection, final_table_name, df)
+#     connection.close()
 
-    return {
-        "connection": connection,
-        "final_table_name": final_table_name,
-        "dataframe": df
-    }
+#     return {
+#         "connection": connection,
+#         "final_table_name": final_table_name,
+#         "dataframe": df
+#     }
 
 # main
 def main():

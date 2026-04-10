@@ -1,6 +1,6 @@
 import sqlite3
 import pandas as pd
-from schema_manager import handle_schema
+from schema_manager import handle_schema, get_existing_table_schema
 from sql_validator import validate_select_query
 from llm_adapter import translate
 
@@ -79,6 +79,7 @@ def execute_query(conn, query):
         print(f"Execution error: {e}")
 
 # handle the workflow for accepting, validating, and running sql
+# parse functions so it returns data neatly
 def run_sql_flow(conn):
     query = input("Enter your SQL query: ").strip()
     # check to make sure that the query is valid 
@@ -139,6 +140,14 @@ def run_nl_flow(conn):
             execute_query(conn, sql_query)
     except Exception as e:
         print(f"LLM query error: {e}")
+
+def get_schema(conn):
+    table_name = input("Enter table name: ").strip()
+    if not table_name:
+        print("Input cannot be empty!")
+        return
+    return get_existing_table_schema(conn, table_name)
+
 
 # the menu loop for the query service
 def main():
