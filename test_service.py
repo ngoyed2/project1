@@ -30,7 +30,8 @@ def teardown_test_db():
 # test listing tables first
 def test_list_tables(capsys):
     setup_test_db()
-    list_tables(test_db)
+    conn = sqlite3.connect(test_db)
+    list_tables(conn)
     captured = capsys.readouterr()
     # looks for "people" in output
     assert "people" in captured.out
@@ -43,7 +44,9 @@ def test_insert_data(capsys):
         "first_name": ["Alice", "Bob"],
         "age": [25, 30]
     })
-    insert_data(test_db, "people", df)
+    conn = sqlite3.connect(test_db)
+    insert_data(conn, "people", df)
+    conn.close()
     # verify data was inserted
     conn = sqlite3.connect(test_db)
     cursor = conn.cursor()
