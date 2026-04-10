@@ -2,7 +2,7 @@
 import os
 import pandas as pd
 import sqlite3
-from schema_manager import handle_schema
+from src.schema_manager import handle_schema
 
 # step 1 is to load the csv
 def load_csv(file_path):
@@ -62,7 +62,8 @@ def insert_data(connection, table_name, df):
 #     # determines name for the table based on csv name
 #     table_name = csv.split(".")[0].replace(" ","_")
 #     # this sends our connection, table name and dataframe to the schema manager
-#     final_table_name = handle_schema(connection, table_name, df)
+#     final_table_name = handle_schema(connection, table_name, d
+# f)
 #     # if the schema manager changed the table in any way, we want to insert the new table name
 #     insert_data(connection, final_table_name, df)
 #     connection.close()

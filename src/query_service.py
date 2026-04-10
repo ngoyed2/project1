@@ -1,14 +1,35 @@
 import sqlite3
 import pandas as pd
-from schema_manager import handle_schema, get_existing_table_schema
-from sql_validator import validate_select_query
-from llm_adapter import translate
+from src.schema_manager import handle_schema, get_existing_table_schema
+from src.sql_validator import validate_select_query
+from src.llm_adapter import translate
 
 # query service should let the user load a csv, list tables, type a sql query, validate the sql query, then execute
 
 # add a database connection helper
 def connect_db(db_name="database.db"):
     return sqlite3.connect(db_name)
+
+# function to clean up the results before they are displayed
+def format_results(headers, rows):
+    # measures the lengths of the headers, then expands the columns to adjust
+    col_widths = [len(h) for h in headers]
+    for row in rows:
+        for i, cell in enumerate(row):
+            col_widths[i] = max(col_widths[i], len(str(cell)))
+    # divides the columns
+    divider = "+-" + "-+-".join("-" * w for w in col_widths) + "-+"
+    # makes the cells the same width so it formats nicely, using col_widths
+    def fmt_row(values):
+        cells = (str(v).ljust(col_widths[i]) for i, v in enumerate(values))
+        return "| " + " | ".join(cells) + " |"
+    print(divider)
+    print(fmt_row(headers))
+    print(divider)
+    # prints actual info with divider
+    for row in rows:
+        print(fmt_row(row))
+    print(divider)
 
 # since the slide mentions sqlite_master, we should add list tables function to show all table names
 # por example, the only tables that will be outputted is people since thats all we have 
@@ -71,8 +92,8 @@ def execute_query(conn, query):
         results = cursor.fetchall()
         if results:
             print("\nResults:")
-            for row in results:
-                print(row)
+            headers = [desc[0] for desc in cursor.description]
+            format_results(headers, results)
         else:
             print("Query ran but returned no rows!")
     except Exception as e:

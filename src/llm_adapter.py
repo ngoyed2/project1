@@ -36,7 +36,7 @@ def parse_response(text:str):
         # looks to find line that'll be returned as sql value, and takes info only after the colon
         if line.lower().startswith("- sql query:"):
             sql = line.split(":",1)[1].strip()
-            # fixes issue with ` `
+            # fixes issue with ` ` in case the sql is returned as inline code
             if (sql.startswith("`") and sql.endswith("`")):
                 sql = sql[1:-1].strip()
             # strip markdowns as well, and adds semicolon in proper SQL form
