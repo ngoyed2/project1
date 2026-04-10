@@ -2,6 +2,7 @@ import sqlite3
 import pandas as pd
 from schema_manager import handle_schema
 from sql_validator import validate_select_query
+from llm_adapter import translate
 
 # query service should let the user load a csv, list tables, type a sql query, validate the sql query, then execute
 
@@ -86,6 +87,59 @@ def run_sql_flow(conn):
     if is_valid:
         execute_query(conn, query)
 
+# llm needs this because we will give the llm context like table: people(id integer, firstname text, . . .) so that it can generate valid sql statements based on the column names and such
+def schema_prompt_maker(conn):
+    cursor = conn.cursor()
+    # get all table names
+    cursor.execute("""
+        SELECT name
+        FROM sqlite_master
+        WHERE type='table'
+        ORDER BY name;
+    """)
+    tables = [row[0] for row in cursor.fetchall()]
+    schema_parts = []
+    # loop through each table
+    for table in tables:
+        cursor.execute(f"PRAGMA table_info({table});")
+        columns = cursor.fetchall()
+        # build column definitions
+        col_defs = []
+        for col in columns:
+            col_name = col[1]
+            col_type = col[2]
+            col_defs.append(f"{col_name} {col_type}")
+        # format ig like people(id INTEGER, name TEXT, age INTEGER)
+        schema_parts.append(f"{table}({', '.join(col_defs)})")
+    # join all tables into one string
+    return "\n".join(schema_parts)
+
+# this function lets the user type normal english, then converts that to sql, then validates, then executes
+def run_nl_flow(conn):
+    # por ejemplo, the user asks "show me all people older than 20"
+    user_input = input("Enter your question in plain English: ").strip()
+    if not user_input:
+        print("Input cannot be empty!")
+        return
+    try:
+        schema_text = schema_prompt_maker(conn)
+        llm_output = translate(user_input, schema_text)
+        if isinstance(llm_output, str):
+            print(llm_output)
+            return
+        sql_query = llm_output["sql"]
+        explanation = llm_output["explanation"]
+        print("\nGenerated SQL:")
+        print(sql_query)
+        print("\nExplanation:")
+        print(explanation)
+        is_valid, message = validate_select_query(conn, sql_query)
+        print(f"\nValidator: {message}")
+        if is_valid:
+            execute_query(conn, sql_query)
+    except Exception as e:
+        print(f"LLM query error: {e}")
+
 # the menu loop for the query service
 def main():
     conn = connect_db()
@@ -94,7 +148,8 @@ def main():
         print("1. Load CSV")
         print("2. List tables")
         print("3. Run SQL query")
-        print("4. Exit")
+        print("4. Ask in natural language")
+        print("5. Exit")
         choice = input("Choose an option: ").strip()
         if choice == "1":
             load_csv_flow(conn)
@@ -103,8 +158,10 @@ def main():
         elif choice == "3":
             run_sql_flow(conn)
         elif choice == "4":
+            run_nl_flow(conn)
+        elif choice == "5":
             print("Byebye!")
-            break
+            break    
         else:
             print("Invalid choice, please enter 1, 2, 3, or 4!")
     conn.close()
