@@ -1,7 +1,7 @@
 import os
 import sys
 import sqlite3
-from csv_ingestor import load_csv
+from csv_ingestor import csv_to_sql
 from query_service import list_tables, insert_data # can only access csv and query modules directly
 
 commands = """
@@ -19,16 +19,14 @@ exit -> quit
 
 db = "database.db"
 
-conn = sqlite3.connect(db)
-
 # need to get access to database
 
 # functions to handle commands other than help and exit
 def load_command(args: str, csv:str):
     try:
-        return("The following csv file has been loaded: ")
-        loaded_csv = load_csv(csv)
-        # need to connect to database, use query function for that
+        loaded_csv = csv_to_sql(csv,db)
+        table_name = loaded_csv["final_table_name"]
+        print("Your table named " + " has been successfully loaded!")
     except FileNotFoundError as e:
         print("Error: " + e)
 
@@ -43,7 +41,6 @@ def sql_command(syntax):
 def schema_command(table):
     return
 
-db_info = "data.csv"
 def main():
     # main function that contains operative aspect of system
     print("\nHELLO! WELCOME TO OUR LLM ASSISTED DATA SYSTEM!")
