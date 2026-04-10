@@ -55,14 +55,13 @@ def parse_response(text:str):
 
 # main function to translate user natural language into something understood by SQL 
 def translate(user_input:str, schema:str):
-
     # necessary to use OpenAI api
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise ValueError("OPENAI_API_KEY environment variable not set")
     client = OpenAI() # actually allows for utilization
 
-    # returns message is no schema was input
+    # returns message if no schema was input
     if not schema:
         return "INVALID, No schema input, cannot generate response"
     
