@@ -1,4 +1,5 @@
 import pytest
+import src.llm_adapter
 from src.llm_adapter import translate, parse_response
 from unittest.mock import patch, MagicMock
 import os
