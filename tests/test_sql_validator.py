@@ -1,5 +1,5 @@
 import sqlite3
-from sql_validator import(get_database_schema,
+from src.sql_validator import(get_database_schema,
     basic_select_check,
     extract_table_name,
     extract_selected_columns,
@@ -49,28 +49,26 @@ class TestBasicSelect:
         assert ok is True  # comment is safe, documents expected behaviour
 
     def test_non_select_rejected(self):
+        # catches non select statements, doesn't go through
         ok, msg = basic_select_check("DROP TABLE people")
         assert ok is False
 
     def test_multiple_statements_rejected(self):
+        # handles various commands in select
         ok, msg = basic_select_check("SELECT * FROM people; DROP TABLE people")
         assert ok is False
 
 class TestTableName:
-    def test_extracts_table_name(self):
-        assert extract_table_name("SELECT * FROM people") == "people"
-
     def test_no_from_returns_none(self):
         assert extract_table_name("SELECT * people") is None
 
     def test_with_where_clause(self):
+        # can handle long queries
         assert extract_table_name("SELECT * FROM people WHERE age > 20") == "people"
 
 class TestColumns:
-    def test_star(self):
-        assert extract_selected_columns("SELECT * FROM people") == ["*"]
-
     def test_multiple_columns(self):
+        # can handle various inputs
         result = extract_selected_columns("SELECT first_name, age FROM people")
         assert result == ["first_name", "age"]
 

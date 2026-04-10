@@ -1,8 +1,8 @@
 import sqlite3
 import pandas as pd
-from schema_manager import handle_schema, get_existing_table_schema
-from sql_validator import validate_select_query
-from llm_adapter import translate
+from src.schema_manager import handle_schema, get_existing_table_schema
+from src.sql_validator import validate_select_query
+from src.llm_adapter import translate
 
 # query service should let the user load a csv, list tables, type a sql query, validate the sql query, then execute
 

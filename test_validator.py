@@ -1,5 +1,5 @@
 import sqlite3
-from sql_validator import validate_select_query
+from src.sql_validator import validate_select_query
 
 conn = sqlite3.connect("database.db")
 

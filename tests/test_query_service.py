@@ -2,7 +2,7 @@ import sqlite3
 import pytest
 import os
 import pandas as pd
-from query_service import list_tables, insert_data, execute_query
+from src.query_service import list_tables, insert_data, execute_query
 
 test_db = "test_database.db"
 

@@ -1,5 +1,5 @@
 import sqlite3
-from query_service import list_tables, load_csv_flow, run_sql_flow, run_nl_flow, get_schema # can only access csv and query modules directly
+from src.query_service import list_tables, load_csv_flow, run_sql_flow, run_nl_flow, get_schema # can only access csv and query modules directly
 
 commands = """
 Commands:
@@ -19,7 +19,7 @@ db = "database.db"
 conn = sqlite3.connect(db)
 
 def main():
-    # main function that contains operative aspect of system
+    # main function that contains operative aspect of system, takes user input and runs respective functions from query service
     print("\nHELLO! WELCOME TO OUR LLM ASSISTED DATA SYSTEM!")
     print(commands) # displays options for user
     while True:
@@ -30,25 +30,18 @@ def main():
         elif user_input.lower().strip() == "help":
             print(commands)
         elif user_input.lower().strip().startswith("schema"):
-            result = get_schema(conn)
-            # print(result)
+            get_schema(conn)
         elif user_input.lower().strip().startswith("ask"):
-            result = run_nl_flow(conn)
-            # print(result)
+            run_nl_flow(conn)
         elif user_input.lower().strip().startswith("sql"):
-            result = run_sql_flow(conn)
-            # print(result)
+            run_sql_flow(conn)
         elif user_input.lower().strip().startswith("load"):
-            result = load_csv_flow(conn)
-            # print(result)
+            load_csv_flow(conn)
         elif user_input.lower().strip().startswith("tables"):
-            result = list_tables(conn)
-            # print(result)
-
+            list_tables(conn)
         # handles unexpected commands
         else:
             print(user_input + " is not a command. Please enter a proper command")
-
 
 if __name__ == "__main__":
     main()

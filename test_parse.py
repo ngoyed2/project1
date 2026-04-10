@@ -1,4 +1,4 @@
-from llm_adapter import parse_response
+from src.llm_adapter import parse_response
 
 passing_response = """
 - SQL Query:SELECT * FROM sales WHERE amount > 1000;
