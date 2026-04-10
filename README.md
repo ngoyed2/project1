@@ -1,5 +1,3 @@
-how to run tests
-
 # Building Data Systems with LLM Interfaces: Project 1
 
 ## System Overview:
@@ -27,7 +25,9 @@ Based on the system architecture shown above, our essential project files includ
 - **Query Service (CLI)**: Main interface for user interaction
 - **SQL Validator**: Ensures only safe and valid SQL queries are executed
 - **LLM Adapter**: Converts natural language into SQL queries
+
 ---
+
 ## How to Run the Project:
 
 ### 1. Install all dependencies
@@ -36,32 +36,62 @@ Based on the system architecture shown above, our essential project files includ
 ``` bash
 pip install pandas python-dotenv
 ```
+
 ---
+
 ### 2. Set up LLM API key:
 ⚠️ This part is optional-- you can use a mock LLM instead!
 If you want to use the natural language feature with an actual LLM, you must set up an API key.
 To do so, do the following:
 1. Create a file in the project root called ".env".
 2. Add your API key in the file: OPENAI_API_KEY=add_your_api_key_here
+
 ---
+
 ### 3. Run the program:
 
-In your terminal, run the following: ``` python cli.py ```. You will then be met with our main menu system that prompts the following commands:
-1. help -> shows user commands
-2. load -> allows user to input CSV file
-3. ask -> lets user ask question in natural language
-4. sql -> execute sql command directly
-5. tables -> show all current tables
-6. schema <table> -> show schema for table
-7. exit -> quit
+In your terminal, run `python cli.py`. You will then be met with a main menu with the following commands:
+
+1. `help` – shows user commands
+2. `load` – allows user to input CSV file
+3. `ask` – lets user ask a question in natural language
+4. `sql` – execute SQL command directly
+5. `tables` – show all current tables
+6. `schema <table>` – show schema for table
+7. `exit` – quit
+
 ---
+
 ### 4. Example workflow:
-1. Type in `load`
-2. Enter in your .csv file (in our case, data.csv)
-3. Enter your table name (in our case, people)
-4. Type in `sql`
-5. Enter in the following sql query (all data from the table should be displayed): ``` sql SELECT * FROM people; ```
-6. If you have LLM API set up, type in `ask`
-7. Enter in the following sql query (this will display all the people older than 20): ``` sql show all people older than 20 ```
+
+1. Type `load`
+2. Enter your `.csv` file (e.g. `data.csv`)
+3. Enter your table name (e.g. `people`)
+4. Type `sql`
+5. Enter: `SELECT * FROM people;`
+6. If you have the LLM API set up, type `ask`
+7. Enter: `show all people older than 20`
+
 ---
+
 ## How to Run the Tests:
+This project uses `pytest` for testing.
+
+### 1. Install pytest 
+Enter the following command in your terminal: ``` pip install pytest ```
+
+### 2. Run pytests for each file
+You can enter in the following commands in your terminal as an example:
+```pytest test_query_service.py```
+```pytest test_schema_manager.py ```
+```pytest test_sql_validator.py ```
+- Make sure the root of each of your test file is in the correct place! We want pytest to be able to find the file!
+
+### Why is this important?
+The tests cover:
+- CSV ingestion and data insertion
+- Schema management and validation
+- SQL query validation
+- Query execution
+- LLM response parsing
+If everything is working correctly, you should see something like: ```X passed in X.XXs ```
