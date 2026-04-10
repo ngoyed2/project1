@@ -1,10 +1,17 @@
 # takes csv file and transforms it into a sql table
+import os
 import pandas as pd
 import sqlite3
 from schema_manager import handle_schema
 
 # step 1 is to load the csv
 def load_csv(file_path):
+    if not file_path:
+        raise ValueError("File path cannot be empty")
+    if not file_path.endswith(".csv"):
+        raise ValueError("Invalid file type, must be .csv file")
+    if not os.path.exists(file_path):
+        raise FileNotFoundError("File not found")
     # instructions said to use pandas.read_csv() to load data
     df = pd.read_csv(file_path)
     print(df.head())
@@ -12,6 +19,8 @@ def load_csv(file_path):
 
 # step 2 is to connect with sqlite
 def create_connection(db_name):
+    if not db_name:
+        raise ValueError("Database path cannot be empty")
     connection = sqlite3.connect(db_name)
     return connection
 

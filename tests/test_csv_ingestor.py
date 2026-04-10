@@ -23,7 +23,28 @@ class TestLoadCSV:
         with pytest.raises(FileNotFoundError):
             load_csv("doesnotexist.csv")
 
+    # checks that file is a csv
+    def test_rejects_non_csv_extension(self):
+        with pytest.raises(ValueError):
+            load_csv("invalid.txt")
+
+class TestCreateConnection:
+
+    # tests establishing connection
+    def test_returns_sqlite_connection(self):
+        conn = create_connection(":memory")
+        assert isinstance(conn, sqlite3.Connection)
+        conn.close
+
+    # tests for path that doesn't exist
+    def test_invalid_path_raises(self):
+        with pytest.raises(Exception):
+            create_connection("/fake/path/data.db")
     
+    # checks for empty inputs
+    def test_empty_string_raises(self):
+        with pytest.raises(Exception):
+            create_connection("")
 
 
 
