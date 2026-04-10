@@ -80,6 +80,7 @@ class TestTranslator:
         assert output["sql"] == "SELECT * FROM sales;"
         assert "sales" in output["explanation"].lower()
 
+    # tests that an empty input will be handled
     def test_handles_empty_responses(self):
         schema = "sales(id INTEGER, name TEXT, amount REAL, region TEXT)"
         fake_reply = ""
